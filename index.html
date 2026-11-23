@@ -930,6 +930,12 @@
         min-height: 0
       }
     }
+    .s-hg{--h:var(--sp)}.s-ps{--h:var(--wb)}.s-cm{--h:var(--spa)}.s-tr{--h:var(--pc)}.s-qa{--h:var(--fg)}
+    .fld{display:flex;flex-direction:column;gap:8px}
+    .yn{display:flex;align-items:center;gap:10px}
+    .yn b{font-family:var(--display);font-size:1.3rem;white-space:nowrap}
+    .yn .line{flex:1;min-width:0;width:auto}
+    .fld .chip{align-self:flex-start}
   </style>
 </head>
 
@@ -943,7 +949,7 @@
           <span class="chip" style="--c:var(--fw)">Pregunta</span>
         </div>
         <h1>Grammar Basics</h1>
-        <p class="sub">Practicá to be, there is/are, can y presente continuo en afirmativo, negativo y pregunta.</p>
+        <p class="sub">Practicá to be, there is/are, can, have got, presente simple, can vs must y presente continuo. Después, pasá oraciones de una forma a otra.</p>
       </header>
       <nav class="menu" id="menu" aria-label="Temas"></nav>
     </div>
@@ -1079,17 +1085,120 @@
           [2, "___ she dancing?", "Is", ["Is", "Does", "Are"]]]
       }
     };
-    T.mix = {c: "var(--ink)", n: "Mix: todos los temas", ex: "32 preguntas de los cuatro temas, mezcladas", q: []};
+
+    const A = x => Array.isArray(x) ? x : [x];
+    const S = (k, a, n, q, y, no) => ({k, f: [A(a), A(n), A(q)], y: A(y), no: A(no)});
+    const nt = (p, a) => [p + " " + a + "n't", p + " " + a + " not"];
+    const cn = p => [p + " can't", p + " cannot", p + " can not"];
+    const hgY = (p, a) => [p + " " + a, p + " " + a + " got"];
+    const hgN = (p, a) => [p + " " + a + "n't", p + " " + a + " not", p + " " + a + "n't got", p + " " + a + " not got"];
+    const MN = ["he needn't", "he doesn't have to"], MIXK = ["be", "there", "can", "pc", "hg", "ps", "cm"], MIXN = 28;
+    const KN = {be: "Verb to be", there: "There is / are", can: "Can", must: "Must", hg: "Have got", ps: "Present simple", pc: "Present continuous"};
+    const KC = {be: "--s-mix", there: "--s-id", can: "--s-adv", must: "--spa", hg: "--sp", ps: "--wb", pc: "--s-qs"};
+    /* S(kind, affirmative[], negative[], question[], short yes[], short no[]) — first item of each list is the one shown */
+    const SENT = [
+      S("be", ["She is a teacher.", "She's a teacher."], ["She isn't a teacher.", "She is not a teacher.", "She's not a teacher."], "Is she a teacher?", "she is", [...nt("she", "is"), "she's not"]),
+      S("be", ["They are from Chile.", "They're from Chile."], ["They aren't from Chile.", "They are not from Chile.", "They're not from Chile."], "Are they from Chile?", "they are", [...nt("they", "are"), "they're not"]),
+      S("be", ["It is cold today.", "It's cold today."], ["It isn't cold today.", "It is not cold today.", "It's not cold today."], "Is it cold today?", "it is", [...nt("it", "is"), "it's not"]),
+      S("there", ["There is a park near here.", "There's a park near here."], ["There isn't a park near here.", "There is not a park near here."], "Is there a park near here?", "there is", nt("there", "is")),
+      S("there", ["There are some books on the desk.", "There are books on the desk."], ["There aren't any books on the desk.", "There are not any books on the desk.", "There are no books on the desk."], "Are there any books on the desk?", "there are", nt("there", "are")),
+      S("there", ["There is some milk in the fridge.", "There is milk in the fridge."], ["There isn't any milk in the fridge.", "There is not any milk in the fridge.", "There is no milk in the fridge."], "Is there any milk in the fridge?", "there is", nt("there", "is")),
+      S("can", "She can swim.", ["She can't swim.", "She cannot swim.", "She can not swim."], "Can she swim?", "she can", cn("she")),
+      S("can", "They can speak French.", ["They can't speak French.", "They cannot speak French.", "They can not speak French."], "Can they speak French?", "they can", cn("they")),
+      S("can", "Birds can fly.", ["Birds can't fly.", "Birds cannot fly.", "Birds can not fly."], "Can birds fly?", "they can", cn("they")),
+      S("must", "Students must wear a uniform.", ["Students mustn't wear a uniform.", "Students must not wear a uniform."], "Must students wear a uniform?", "they must", [...nt("they", "must"), "they needn't", "they don't have to"]),
+      S("must", "Drivers must stop at a red light.", ["Drivers mustn't stop at a red light.", "Drivers must not stop at a red light."], "Must drivers stop at a red light?", "they must", [...nt("they", "must"), "they needn't", "they don't have to"]),
+      S("must", "He must tell the truth.", ["He mustn't tell the truth.", "He must not tell the truth."], "Must he tell the truth?", "he must", [...nt("he", "must"), ...MN]),
+      S("hg", ["She has got a dog.", "She's got a dog."], ["She hasn't got a dog.", "She has not got a dog."], "Has she got a dog?", hgY("she", "has"), hgN("she", "has")),
+      S("hg", ["They have got a big house.", "They've got a big house."], ["They haven't got a big house.", "They have not got a big house."], "Have they got a big house?", hgY("they", "have"), hgN("they", "have")),
+      S("hg", ["He has got blue eyes.", "He's got blue eyes."], ["He hasn't got blue eyes.", "He has not got blue eyes."], "Has he got blue eyes?", hgY("he", "has"), hgN("he", "has")),
+      S("ps", "She plays tennis on Saturdays.", ["She doesn't play tennis on Saturdays.", "She does not play tennis on Saturdays."], "Does she play tennis on Saturdays?", "she does", nt("she", "does")),
+      S("ps", "They live in Mendoza.", ["They don't live in Mendoza.", "They do not live in Mendoza."], "Do they live in Mendoza?", "they do", nt("they", "do")),
+      S("ps", "My mom works in a hospital.", ["My mom doesn't work in a hospital.", "My mom does not work in a hospital."], "Does my mom work in a hospital?", "she does", nt("she", "does")),
+      S("pc", ["She is reading a book.", "She's reading a book."], ["She isn't reading a book.", "She is not reading a book.", "She's not reading a book."], "Is she reading a book?", "she is", [...nt("she", "is"), "she's not"]),
+      S("pc", ["They are playing football.", "They're playing football."], ["They aren't playing football.", "They are not playing football.", "They're not playing football."], "Are they playing football?", "they are", [...nt("they", "are"), "they're not"]),
+      S("pc", ["It is raining now.", "It's raining now."], ["It isn't raining now.", "It is not raining now.", "It's not raining now."], "Is it raining now?", "it is", [...nt("it", "is"), "it's not"])
+    ];
+    Object.assign(T, {
+      hg: {
+        n: "Have got", ex: "She has got a dog · I haven't got a pen",
+        tip: ["<b>have / has</b> + got: I <b>have got</b> · she <b>has got</b>", "<b>haven't / hasn't</b> + got: I <b>haven't got</b> · he <b>hasn't got</b>", "<b>Have / Has</b> + subject + got…? <b>Has</b> she <b>got</b> a dog?"],
+        q: [
+          [0, "She ___ a dog.", "has got", ["has got", "have got", "is got"]],
+          [0, "They ___ a big house.", "have got", ["has got", "have got", "are got"]],
+          [0, "I ___ (have got) two brothers.", ["have got", "'ve got"]],
+          [0, "The school ___ a big library.", ["has got", "'s got"]],
+          [1, "She ___ a car.", "hasn't got", ["hasn't got", "haven't got", "doesn't got"]],
+          [1, "I ___ any money. (negative)", ["haven't got", "have not got"]],
+          [1, "He ___ a phone. (negative)", ["hasn't got", "has not got"]],
+          [1, "They ___ a garden.", "haven't got", ["haven't got", "hasn't got", "don't got"]],
+          [2, "___ you got a pencil?", ["have"]],
+          [2, "___ she got a sister?", ["has"]],
+          [2, "Have they got a car? Yes, they ___.", "have", ["have", "has", "do"]],
+          [2, "Has he got a bike? No, he ___.", "hasn't", ["hasn't", "haven't", "doesn't"]]]
+      },
+      ps: {
+        n: "Present simple", ex: "He plays · she doesn't work · Do you like…?",
+        tip: ["I/you/we/they + verb · he/she/it + verb<b>-s</b>: She <b>plays</b>", "<b>don't</b> / <b>doesn't</b> + verb (sin -s): She <b>doesn't play</b>", "<b>Do</b> / <b>Does</b> + subject + verb? <b>Does</b> he <b>work</b>?"],
+        q: [
+          [0, "She ___ (play) tennis on Saturdays.", ["plays"]],
+          [0, "They ___ in Mendoza.", "live", ["live", "lives", "living"]],
+          [0, "He ___ English every day.", "studies", ["studies", "study", "studys"]],
+          [0, "My mom ___ in a hospital.", "works", ["works", "work", "is work"]],
+          [1, "She ___ (not / like) coffee.", ["doesn't like", "does not like"]],
+          [1, "They ___ play football.", "don't", ["don't", "doesn't", "aren't"]],
+          [1, "He ___ work on Sundays.", "doesn't", ["doesn't", "don't", "isn't"]],
+          [1, "I ___ (not / eat) meat.", ["don't eat", "do not eat"]],
+          [2, "___ she like music?", ["does"]],
+          [2, "___ they live here?", ["do"]],
+          [2, "Do you play chess? Yes, I ___.", "do", ["do", "does", "play"]],
+          [2, "Does he work here? No, he ___.", "doesn't", ["doesn't", "don't", "isn't"]]]
+      },
+      cm: {
+        n: "Can vs must", ex: "I can swim · you must wear a helmet",
+        tip: ["<b>can</b> = habilidad o permiso · <b>must</b> = obligación: You <b>must</b> wear a helmet.", "<b>can't</b> = no puede / no sabe · <b>mustn't</b> = está prohibido: You <b>mustn't</b> run.", "<b>Can</b> I…? pide permiso o pregunta habilidad · <b>Must</b> I…? ¿tengo que…?"],
+        q: [
+          [0, "You ___ wear a helmet on a motorbike. (obligación)", "must", ["must", "can", "can't"]],
+          [0, "Birds ___ fly. (habilidad)", "can", ["can", "must", "mustn't"]],
+          [0, "Students ___ do their homework. (obligación)", ["must"]],
+          [0, "She ___ play the piano very well. (habilidad)", ["can"]],
+          [1, "You ___ use your phone in the exam. (prohibido)", "mustn't", ["mustn't", "don't must", "not must"]],
+          [1, "A baby ___ walk. (no sabe)", "can't", ["can't", "mustn't", "doesn't can"]],
+          [1, "You ___ shout in class. (prohibido)", ["mustn't", "must not"]],
+          [1, "I ___ lift this box. It's too heavy.", ["can't", "cannot", "can not"]],
+          [2, "___ I go to the bathroom, please? (permiso)", "Can", ["Can", "Must", "Do"]],
+          [2, "Must I finish this today? Yes, you ___.", "must", ["must", "can", "do"]],
+          [2, "Can she drive? No, she ___.", ["can't", "cannot", "can not"]],
+          [2, "___ you swim? (habilidad)", ["can"]]]
+      },
+      tr: {
+        mode: "tr", q: [], n: "Pasar oraciones", ex: "Te damos una forma, escribís las otras dos",
+        intro: "12 oraciones al azar de todos los temas (to be, there is/are, can, must, have got, presente simple y continuo). Te damos una forma y escribís las otras dos.",
+        tip: ["She <b>has got</b> · he <b>plays</b> · I <b>can</b> swim · you <b>must</b> go · she <b>is</b> here", "She <b>hasn't got</b> · he <b>doesn't play</b> · I <b>can't</b> · you <b>mustn't</b> · she <b>isn't</b>", "<b>Has</b> she got…? · <b>Does</b> he play…? · <b>Can</b> I…? · <b>Must</b> you…? · <b>Is</b> she…?"]
+      },
+      qa: {
+        mode: "qa", q: [], n: "Preguntas y respuestas", ex: "She has got a dog → Has she got a dog? Yes, she has.",
+        intro: "12 oraciones afirmativas al azar. Pasalas a pregunta y respondé con la respuesta corta que te indica (Yes, … o No, …).",
+        lab: ["Pregunta", "Yes, …", "No, …"],
+        tip: ["She has got a dog → <b>Has she got</b> a dog?", "Yes, she <b>has</b>. · Yes, he <b>does</b>. · Yes, I <b>can</b>.", "No, she <b>hasn't</b>. · No, he <b>doesn't</b>. · No, I <b>can't</b>."]
+      }
+    });
+    T.mix = {c: "var(--ink)", n: "Mix: todos los temas", ex: "28 preguntas de los siete temas, mezcladas", q: []};
     Object.keys(T).forEach(k => T[k].q.forEach(q => q.t = k));
 
     const P = ["Afirmativo", "Negativo", "Pregunta"], PCOL = ["--pc", "--spa", "--fw"];
-    const SEC = {be: "s-mix", there: "s-id", can: "s-adv", pc: "s-qs", mix: "s-all"};
+    const SEC = {be: "s-mix", there: "s-id", can: "s-adv", pc: "s-qs", hg: "s-hg", ps: "s-ps", cm: "s-cm", tr: "s-tr", qa: "s-qa", mix: "s-all"};
     const ICO = {
       be: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
       there: '<path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
       can: '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',
       pc: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-      mix: '<path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>'
+      mix: '<path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
+      hg: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2"/>',
+      ps: '<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 013-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 01-3 3H3"/>',
+      cm: '<path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/>',
+      tr: '<path d="M4 12a8 8 0 0114-5.3L20 9"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 01-14 5.3L4 15"/><path d="M4 20v-5h5"/>',
+      qa: '<path d="M21 12a8 8 0 01-11.5 7.2L4 20l1-4.6A8 8 0 1121 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/>'
     };
     const svg = (k, s) => `<svg viewBox="0 0 24 24" width="${s || 22}" height="${s || 22}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICO[k]}</svg>`;
     const $ = id => document.getElementById(id);
@@ -1105,24 +1214,25 @@
       $("view").hidden = true; $("home").hidden = false; window.scrollTo(0, 0);
       $("menu").innerHTML = Object.keys(T).map(k => {
         const b = best(k);
-        return `<button class="item ${SEC[k]}${k === "mix" ? " wide" : ""}" type="button" onclick="openTopic('${k}')"><span class="ico">${svg(k)}</span><span class="ttl">${T[k].n}</span><span class="dsc">${T[k].ex}</span>${b ? `<span class="mono best">Mejor: ${b}</span>` : ""}<span class="arr" aria-hidden="true">&rarr;</span></button>`
+        return `<button class="item ${SEC[k]}" type="button" onclick="openTopic('${k}')"><span class="ico">${svg(k)}</span><span class="ttl">${T[k].n}</span><span class="dsc">${T[k].ex}</span>${b ? `<span class="mono best">Mejor: ${b}</span>` : ""}<span class="arr" aria-hidden="true">&rarr;</span></button>`
       }).join("");
     }
     function openTopic(k) {
       cur = k; $("home").hidden = true; $("view").hidden = false; $("view").className = "view " + SEC[k];
       $("vico").innerHTML = svg(k, 26); $("vtitle").textContent = T[k].n;
       const g = $("guide"); g.hidden = k === "mix"; g.open = true;
-      $("gridg").innerHTML = (T[k].tip || []).map((x, j) => `<div class="g"><span class="chip" style="--c:var(${PCOL[j]})">${P[j]}</span><p style="margin:0;font-size:.95rem">${x}</p></div>`).join("");
-      $("card").innerHTML = `<p class="inst">${k === "mix" ? "32 preguntas de los cuatro temas, en orden aleatorio." : "24 preguntas: 8 afirmativas, 8 negativas y 8 de pregunta."} Al final vas a ver tu resultado.</p><div class="actions"><button class="btn primary" type="button" onclick="begin()">Empezar</button></div>`;
+      $("gridg").innerHTML = (T[k].tip || []).map((x, j) => `<div class="g"><span class="chip" style="--c:var(${PCOL[j]})">${(T[k].lab || P)[j]}</span><p style="margin:0;font-size:.95rem">${x}</p></div>`).join("");
+      $("card").innerHTML = `<p class="inst">${T[k].intro || (k === "mix" ? MIXN + " preguntas de los siete temas, en orden aleatorio." : T[k].q.length + " preguntas: " + T[k].q.length / 3 + " afirmativas, " + T[k].q.length / 3 + " negativas y " + T[k].q.length / 3 + " de pregunta.")} Al final vas a ver tu resultado.</p><div class="actions"><button class="btn primary" type="button" onclick="begin()">Empezar</button></div>`;
       window.scrollTo(0, 0);
     }
     function begin() {
       i = 0; score = 0; wrong = []; $("guide").open = false;
-      if (cur === "mix") qs = shuf(["be", "there", "can", "pc"].flatMap(k => shuf(T[k].q).slice(0, 8)));
+      if (T[cur].mode) qs = buildS(); else if (cur === "mix") qs = shuf(MIXK.flatMap(k => shuf(T[k].q).slice(0, 4)));
       else qs = shuf(T[cur].q).sort((a, b) => a[0] - b[0]);
       ask();
     }
     function ask() {
+      if (T[cur].mode) return askS();
       const q = qs[i], n = qs.length, mc = !!q[3];
       const blank = mc ? '<span class="gap" id="gap">&nbsp;</span>' : '<input id="inp" class="blank" style="width:17ch" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="Tu respuesta" onkeydown="if(event.key===\'Enter\')chk()">';
       $("card").innerHTML = `<div class="head"><span class="mono">Pregunta <b>${i + 1}</b> / ${n}</span><span style="display:flex;gap:8px;align-items:center">${cur === "mix" ? `<span class="pill">${T[q.t].n}</span>` : ""}<span class="chip" style="--c:var(${PCOL[q[0]]})">${P[q[0]]}</span></span></div>
@@ -1151,28 +1261,72 @@
       el.disabled = true; el.classList.add(ok ? "ok" : "bad");
       done(ok);
     }
-    function done(ok) {
+    function done(ok, why) {
       locked = true; const q = qs[i];
       if (ok) score++; else wrong.push(q);
       const f = $("fb"); f.className = "fb " + (ok ? "good" : "bad");
-      f.innerHTML = ok ? "<b>¡Correcto!</b>" : `<b>Casi</b><span class="why">Respuesta correcta: ${fill(q)}</span>`;
+      f.innerHTML = ok ? "<b>¡Correcto!</b>" : `<b>Casi</b><span class="why">${why || "Respuesta correcta: " + fill(q)}</span>`;
       const a = $("act"); a.hidden = false;
       a.innerHTML = `<button class="btn primary" type="button" onclick="next()">${i === qs.length - 1 ? "Ver resultado" : "Siguiente"}</button>`;
       a.firstChild.focus({preventScroll: true});
     }
+    const nS = (s, short) => {let v = norm(s).replace(/[.?!]+$/, "").trim(); return short ? v.replace(/^(yes|no)\s*,?\s*/, "") : v};
+    function buildS() {
+      return shuf(shuf(SENT).slice(0, 12).map((x, j) => ({it: x, k: x.k, g: j % 3, yes: j % 2 === 0})));
+    }
+    const needS = q => cur === "qa" ? [2, 3] : [0, 1, 2].filter(j => j !== q.g);
+    const expS = q => cur === "qa" ? [q.it.f[2], q.yes ? q.it.y : q.it.no] : needS(q).map(j => q.it.f[j]);
+    function reviewS(q) {
+      const f = q.it.f;
+      return cur === "qa" ? `<div>${f[0][0]}</div><div>${f[2][0]}</div><div><b>${q.yes ? "Yes" : "No"}, ${(q.yes ? q.it.y : q.it.no)[0]}.</b></div>`
+        : [0, 1, 2].map(j => `<div><span class="chip" style="--c:var(${PCOL[j]})">${P[j]}</span> ${f[j][0]}</div>`).join("");
+    }
+    function kd(e, el) {
+      if (e.key !== "Enter") return;
+      const all = [...document.querySelectorAll("input.line")], k = all.indexOf(el);
+      k < all.length - 1 ? all[k + 1].focus() : chkS();
+    }
+    function askS() {
+      const q = qs[i], n = qs.length, it = q.it, qa = cur === "qa", g = qa ? 0 : q.g;
+      const att = 'autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" onkeydown="kd(event,this)"';
+      const fields = needS(q).map(j => j === 3
+        ? `<div class="fld"><span class="chip" style="--c:var(${PCOL[q.yes ? 0 : 1]})">Respuesta corta</span><div class="yn"><b>${q.yes ? "Yes," : "No,"}</b><input class="line" aria-label="Respuesta corta" ${att}></div></div>`
+        : `<label class="fld"><span class="chip" style="--c:var(${PCOL[j]})">${P[j]}</span><input class="line" ${att}></label>`).join("");
+      $("card").innerHTML = `<div class="head"><span class="mono">Oración <b>${i + 1}</b> / ${n}</span><span class="pill">${KN[q.k]}</span></div>
+  <div class="bar"><i style="width:${i / n * 100}%"></i></div>
+  <div class="q"><p class="inst">${qa ? `Pasá la oración a pregunta y respondé con “${q.yes ? "Yes" : "No"}, …”.` : "Pasá la oración a las otras dos formas. Escribilas completas."}</p>
+  <span class="chip" style="--c:var(${PCOL[g]})">${P[g]}</span>
+  <blockquote class="ans">${it.f[g][0]}</blockquote>${fields}</div>
+  <div class="fb" id="fb" aria-live="polite"></div>
+  <div class="actions" id="act"><button class="btn primary" type="button" onclick="chkS()">Comprobar</button></div>`;
+      locked = false; document.querySelector("input.line").focus({preventScroll: true});
+    }
+    function chkS() {
+      if (locked) return;
+      const ins = [...document.querySelectorAll("input.line")], e = ins.find(x => !x.value.trim());
+      if (e) return e.focus();
+      const q = qs[i], ex = expS(q), qa = cur === "qa", need = needS(q), bad = [];
+      ins.forEach((el, j) => {
+        const ok = ex[j].some(a => nS(a, qa && j) === nS(el.value, qa && j));
+        el.disabled = true; el.classList.add(ok ? "ok" : "bad");
+        if (!ok) bad.push(qa ? (j ? `${q.yes ? "Yes" : "No"}, ${ex[j][0]}.` : `Pregunta: ${ex[j][0]}`) : `${P[need[j]]}: ${ex[j][0]}`);
+      });
+      done(!bad.length, "Respuesta correcta:<br>" + bad.join("<br>"));
+    }
     function next() {i++; i < qs.length ? ask() : end()}
     function end() {
       saveBest(cur, score, qs.length);
-      const n = qs.length, r = score / n, mix = cur === "mix";
+      const n = qs.length, r = score / n, mix = cur === "mix", isS = !!T[cur].mode;
       const m = r === 1 ? "¡Perfecto! Excelente trabajo." : r >= .75 ? "¡Muy bien! Ya casi lo dominás." : r >= .5 ? "Buen intento. Repasá la regla y probá de nuevo." : "Seguí practicando. Repasá la regla y probá de nuevo.";
-      const keyOf = mix ? (q => q.t) : (q => q[0]);
-      const groups = mix ? [["be", T.be.n, "--s-mix"], ["there", T.there.n, "--s-id"], ["can", T.can.n, "--s-adv"], ["pc", T.pc.n, "--s-qs"]] : [[0, P[0], PCOL[0]], [1, P[1], PCOL[1]], [2, P[2], PCOL[2]]];
+      const keyOf = isS ? (q => q.k) : mix ? (q => q.t) : (q => q[0]);
+      const groups = isS ? Object.keys(KN).map(k => [k, KN[k], KC[k]]) : mix ? [["be", T.be.n, "--s-mix"], ["there", T.there.n, "--s-id"], ["can", T.can.n, "--s-adv"], ["pc", T.pc.n, "--s-qs"], ["hg", T.hg.n, "--sp"], ["ps", T.ps.n, "--wb"], ["cm", T.cm.n, "--spa"]] : [[0, P[0], PCOL[0]], [1, P[1], PCOL[1]], [2, P[2], PCOL[2]]];
       const rows = groups.map(([g, l, c]) => {
         const t = qs.filter(q => keyOf(q) === g).length, ok = t - wrong.filter(q => keyOf(q) === g).length;
+        if (!t) return "";
         return `<li style="--c:var(${c})"><span>${l}</span><span class="mb"><i style="width:${t ? ok / t * 100 : 0}%"></i></span><span class="mono">${ok}/${t}</span></li>`
       }).join("");
       $("card").innerHTML = `<div class="done"><h2>Resultado</h2><p class="score">${score} / ${n}</p><p class="inst">${m}</p><ul class="by">${rows}</ul>
-  ${wrong.length ? `<h2>Para repasar</h2><div class="gridg" style="padding:0;width:100%">${wrong.map(q => `<div class="g">${fill(q)}</div>`).join("")}</div>` : ""}
+  ${wrong.length ? `<h2>Para repasar</h2><div class="gridg" style="padding:0;width:100%">${wrong.map(q => `<div class="g">${isS ? reviewS(q) : fill(q)}</div>`).join("")}</div>` : ""}
   <div class="actions"><button class="btn primary" type="button" onclick="begin()">Intentar de nuevo</button><button class="btn ghost" type="button" onclick="home()">Otros temas</button></div></div>`;
       window.scrollTo(0, 0);
     }
